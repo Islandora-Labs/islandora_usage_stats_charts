@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @file
+ * The main Islandora Usage Stats for Charts module file.
+ */
+
+// Includes blocks.
+require_once dirname(__FILE__) . '/includes/blocks.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function islandora_usage_stats_charts_menu() {
+  $items['admin/islandora/tools/islandora_usage_stats_charts'] = array(
+    'title' => 'Islandora Usage Stats for Charts',
+    'description' => 'Configure the Islandora Usage Stats for Charts module.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('islandora_usage_stats_charts_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
+ * Admin form definition.
+ */
+function islandora_usage_stats_charts_admin_settings() {
+  $form = array();
+  $form['islandora_usage_stats_charts_javascript_url'] = array(
+    '#type' => 'textfield',
+    '#size' => '100',
+    '#title' => t('Chart.js library URL'),
+    '#default_value' => variable_get('islandora_usage_stats_charts_javascript_url', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js'),
+  );
+  $form['islandora_usage_stats_charts_collapsed'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Collapse usage stats block by default?'),
+    '#default_value' => variable_get('islandora_usage_stats_charts_collapsed', 1),
+    '#description' => t('Whether or not the block containing the usage stats be collapsed by default. The user can toggle the collapse.'),
+  );
+  $form['islandora_usage_stats_charts_show_datastreams_downloads'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show datastream download stats'),
+    '#default_value' => variable_get('islandora_usage_stats_charts_show_datastreams_downloads', 0),
+  );
+  return system_settings_form($form);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function islandora_usage_stats_charts_theme() {
+  return array(
+    'islandora_usage_stats_charts' => array(
+      'variables' => array(
+        'content' => NULL,
+        'collapsed' => NULL,
+      ),
+      'path' => drupal_get_path('module', 'islandora_usage_stats_charts') . '/theme',
+      'template' => 'islandora_usage_stats_charts',
+    ),
+  );
+}
