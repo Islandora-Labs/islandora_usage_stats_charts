@@ -1,17 +1,18 @@
 var islandoraUsageChart = document.getElementById('islandora-usage-stats-chart');
 
 var usageData = {
-  labels: ["Nov 2017", "Dec 2017", "Jan 2018", "Feb 2018", "March 2018", "April 2018"],
+  labels: Drupal.settings.islandora_usage_stats_charts.chartLabels,
   datasets: [{
     label: "Views",
     backgroundColor: Drupal.settings.islandora_usage_stats_charts.viewsColor,
-    data: [15, 12, 10, 5, 10, 13, 15],
+    data: Drupal.settings.islandora_usage_stats_charts.chartValues,
   },
+/*
   {
     label: "Downloads",
     backgroundColor: Drupal.settings.islandora_usage_stats_charts.downloadsColor,
     data: [10, 6, 5, 8, 14, 5],
-  },]
+  },*/ ]
 };
 
 var usageChart = new Chart(islandoraUsageChart, {
@@ -25,7 +26,8 @@ var usageChart = new Chart(islandoraUsageChart, {
         scales: {
             yAxes: [{
                 ticks: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                     stepSize: 1 
                 }
             }]
         }

@@ -88,8 +88,8 @@ function islandora_usage_stats_charts_generate_stats($pid) {
   $js_url = variable_get('islandora_usage_stats_charts_javascript_url', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js');
   drupal_add_js($js_url, 'external');
 
-  // Get usage stats going back six months, grouped by month. This is likely
-  // not portable across RDBMSs, but is also probably not possible using
+  // Get usage stats going back six months, grouped by month. This is not
+  // portable across RDBMSs, but is also probably not possible using
   // Drupal's database API.
   $six_months_ago = $six_monts_ago = strtotime('-6 months', time());
   $dev_result = db_query("select year(from_unixtime(time)) as year, month(from_unixtime(time)) as month, count(*) as count from {islandora_usage_stats_object_access_log} where time between :ago and now() and pid_id = :pid_id group by month(from_unixtime(time))", array(':ago' => $six_months_ago, ':pid_id' => $access_log_id));
@@ -99,7 +99,9 @@ function islandora_usage_stats_charts_generate_stats($pid) {
     $label = $row->year . '-' . $month;
     $data[$label] = $row->count;
   }
-  dd($data);
+  ksort($data, SORT_NATURAL);
+  $chart_labels = array_keys($data);
+  $chart_values = array_values($data);
 
   // Define an alter hook to allow third-party modules to add data from other
   // sources (e.g. gathered outside of Islandora) and merge them with $output.
@@ -107,12 +109,9 @@ function islandora_usage_stats_charts_generate_stats($pid) {
   drupal_alter('islandora_usage_stats_charts_usage', $output, $pid);
 
   if (variable_get('islandora_usage_stats_charts_show_datastreams_downloads', 1)) {
-    // @todo: Render datastream download stats and append the output to the
-    // 'content' theme variable so all graphs are in the same block.
+    // @todo: Get datastream download stats and add to data being passed to Chart.js.
   }
 
-  // Currently, we are using data hard-coded into the Javascript file.
-  // @todo: Pass in data from stats tables.
   drupal_add_js(drupal_get_path('module', 'islandora_usage_stats_charts') . '/js/usageStatsChart.js', array('scope' => 'footer'));
 
   $bar_colors = array(
@@ -120,6 +119,7 @@ function islandora_usage_stats_charts_generate_stats($pid) {
     'downloadsColor' => variable_get('islandora_usage_stats_charts_downloads_color', '#99b3ff'),
   );
   drupal_add_js(array('islandora_usage_stats_charts' => $bar_colors), 'setting');
+  drupal_add_js(array('islandora_usage_stats_charts' => array('chartLabels' => $chart_labels, 'chartValues' => $chart_values)), 'setting');
 
   $collapsed = variable_get('islandora_usage_stats_charts_collapsed', 1) ? 'collapsed' : '';
   $markup = theme('islandora_usage_stats_charts', array(
