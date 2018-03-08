@@ -110,8 +110,15 @@ function islandora_usage_stats_charts_generate_stats($pid) {
     // 'content' theme variable so all graphs are in the same block.
   }
 
-  // @todo: Pass in $output via Drupal.settings.
+  // Currently, we are using data hard-coded into the Javascript file.
+  // @todo: Pass in data from stats tables.
   drupal_add_js(drupal_get_path('module', 'islandora_usage_stats_charts') . '/js/usageStatsChart.js', array('scope' => 'footer'));
+
+  $bar_colors = array(
+    'viewsColor' => variable_get('islandora_usage_stats_charts_views_color', '#002db3'),
+    'downloadsColor' => variable_get('islandora_usage_stats_charts_downloads_color', '#99b3ff')
+  );
+  drupal_add_js(array('islandora_usage_stats_charts' => $bar_colors), 'setting');
 
   $collapsed = variable_get('islandora_usage_stats_charts_collapsed', 1) ? 'collapsed' : '';
   $markup = theme('islandora_usage_stats_charts', array(
