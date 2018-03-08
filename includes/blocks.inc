@@ -45,10 +45,10 @@ function islandora_usage_stats_charts_block_view($delta = '') {
  */
 function islandora_usage_stats_charts_block_configure($delta) {
   if ($delta == 'object') {
-    $form['display_summary_only'] = array(
+    $form['islandora_usage_stats_charts_collapsed'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Display usage summary only (no chart).'),
-      '#default_value' => variable_get('display_summary_only', 0),
+      '#title' => t('Collapse usage stats chart block by default (user can toggle)'),
+      '#default_value' => variable_get('islandora_usage_stats_charts_collapsed', 1),
     );
     return $form;
   }
@@ -59,7 +59,7 @@ function islandora_usage_stats_charts_block_configure($delta) {
  */
 function islandora_usage_stats_charts_block_save($delta = '', $edit = array()) {
   if ($delta == 'object') {
-    variable_set('display_summary_only', (int) $edit['display_summary_only']);
+    variable_set('islandora_usage_stats_charts_collapsed', (int) $edit['islandora_usage_stats_charts_collapsed']);
   }
 }
 
@@ -68,22 +68,6 @@ function islandora_usage_stats_charts_block_save($delta = '', $edit = array()) {
  */
 function islandora_usage_stats_charts_generate_stats($pid) {
   $access_log_id = islandora_usage_stats_charts_get_object_access_id($pid);
-
-  if (variable_get('display_summary_only')) {
-    $result = db_select('islandora_usage_stats_object_access_log')
-      ->fields('islandora_usage_stats_object_object_log', array('id'))
-      ->condition('pid_id', $access_log_id)
-      ->countQuery()
-      ->execute();
-    $count = $result->fetchField();
-
-    $collapsed = variable_get('islandora_usage_stats_charts_collapsed', 1) ? 'collapsed' : '';
-    $markup = theme('islandora_usage_stats_charts', array(
-      'collapsed' => $collapsed,
-      'content' => "This item has been accessed " . $count . " times.",
-    ));
-    return $markup;
-  }
 
   $js_url = variable_get('islandora_usage_stats_charts_javascript_url', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js');
   drupal_add_js($js_url, 'external');
@@ -109,7 +93,7 @@ function islandora_usage_stats_charts_generate_stats($pid) {
   drupal_alter('islandora_usage_stats_charts_usage', $output, $pid);
 
   if (variable_get('islandora_usage_stats_charts_show_datastreams_downloads', 1)) {
-    // @todo: Get datastream download stats and add to data being passed to Chart.js.
+    // @todo: Get datastream download stats and pass to Chart.js.
   }
 
   drupal_add_js(drupal_get_path('module', 'islandora_usage_stats_charts') . '/js/usageStatsChart.js', array('scope' => 'footer'));

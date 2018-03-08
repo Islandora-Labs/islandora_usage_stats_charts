@@ -13,6 +13,8 @@ function islandora_usage_stats_charts_uninstall() {
     'islandora_usage_stats_charts_collapsed',
     'islandora_usage_stats_charts_show_datastreams_downloads',
     'islandora_usage_stats_charts_javascript_url',
+    'islandora_usage_stats_charts_views_color',
+    'islandora_usage_stats_charts_downloads_color',
   );
   array_walk($variables, 'variable_del');
 }

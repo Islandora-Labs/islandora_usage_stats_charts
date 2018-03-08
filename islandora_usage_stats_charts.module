@@ -48,12 +48,6 @@ function islandora_usage_stats_charts_admin_settings() {
     '#default_value' => variable_get('islandora_usage_stats_charts_downloads_color', '#99b3ff'),
     '#description' => t('Use hexidecimal color values.'),
   );
-  $form['islandora_usage_stats_charts_collapsed'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Collapse usage stats block by default?'),
-    '#default_value' => variable_get('islandora_usage_stats_charts_collapsed', 1),
-    '#description' => t('Whether or not the block containing the usage stats be collapsed by default. The user can toggle the collapse.'),
-  );
   $form['islandora_usage_stats_charts_show_datastreams_downloads'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show datastream download stats'),
