@@ -88,17 +88,18 @@ function islandora_usage_stats_charts_generate_stats($pid) {
   $js_url = variable_get('islandora_usage_stats_charts_javascript_url', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js');
   drupal_add_js($js_url, 'external');
 
-  // Query the object access table for rows for the current object.
-  $result = db_select('islandora_usage_stats_object_access_log')
-    ->fields('islandora_usage_stats_object_access_log',
-      array('id', 'time', 'ip'))
-    ->condition('pid_id', $access_log_id)
-    ->execute();
-  $uses = $result->fetchAll();
-
-  foreach ($uses as $use) {
-    $output[$use->id] = array('time' => $use->time, 'ip' => $use->ip);
+  // Get usage stats going back six months, grouped by month. This is likely
+  // not portable across RDBMSs, but is also probably not possible using
+  // Drupal's database API.
+  $six_months_ago = $six_monts_ago = strtotime('-6 months', time());
+  $dev_result = db_query("select year(from_unixtime(time)) as year, month(from_unixtime(time)) as month, count(*) as count from {islandora_usage_stats_object_access_log} where time between :ago and now() and pid_id = :pid_id group by month(from_unixtime(time))", array(':ago' => $six_months_ago, ':pid_id' => $access_log_id));
+  $data = array();
+  foreach ($dev_result as $row) {
+    $month = str_pad($row->month, 2, '0', STR_PAD_LEFT);
+    $label = $row->year . '-' . $month;
+    $data[$label] = $row->count;
   }
+  dd($data);
 
   // Define an alter hook to allow third-party modules to add data from other
   // sources (e.g. gathered outside of Islandora) and merge them with $output.
@@ -116,7 +117,7 @@ function islandora_usage_stats_charts_generate_stats($pid) {
 
   $bar_colors = array(
     'viewsColor' => variable_get('islandora_usage_stats_charts_views_color', '#002db3'),
-    'downloadsColor' => variable_get('islandora_usage_stats_charts_downloads_color', '#99b3ff')
+    'downloadsColor' => variable_get('islandora_usage_stats_charts_downloads_color', '#99b3ff'),
   );
   drupal_add_js(array('islandora_usage_stats_charts' => $bar_colors), 'setting');
 
