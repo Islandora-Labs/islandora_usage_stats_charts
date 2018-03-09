@@ -29,11 +29,10 @@ var usageChart = new Chart(islandoraUsageChart, {
             yAxes: [{
                 ticks: {
                     beginAtZero: true,
-                     // @todo: change stepSize according to the highest value in the data.
-                     stepSize: 1 
+                    // @todo: change stepSize to 1 if there are fewer than 10 usages.
+                    // stepSize: 1 
                 }
             }]
         }
     }
 });
-

@@ -12,6 +12,7 @@ Only the last 6 months of data is shown in the chart.
 
 * [Islandora](https://github.com/Islandora/islandora)
 * [Islandora Usage Stats](https://github.com/Islandora/islandora_usage_stats)
+* MySQL. The SQL used to query the statistics uses MySQL-specific functions.
 
 [Chart.js](http://www.chartjs.org/) is not a local requirement, since it is called from a CDN.
 
@@ -33,6 +34,7 @@ This module defines a Drupal alter hook that allows third-party modules to alter
 
 * Functionality
   * Add a link to output get all the data as a CSV file.
+  * PostgresQL support.
 * Scalability and performance
   * Use Ajax to generate block content so that it doesn't slow down page rendering.
 * Nice to have
