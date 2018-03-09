@@ -23,7 +23,7 @@ var usageChart = new Chart(islandoraUsageChart, {
     options: {
         title: {
             display: true,
-            text: 'Usage stats for the last six months'
+            text: 'Usage stats for the last ' + Drupal.settings.islandora_usage_stats_charts.numMonthsData + ' months'
         },
         scales: {
             yAxes: [{

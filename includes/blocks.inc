@@ -72,9 +72,10 @@ function islandora_usage_stats_charts_generate_stats($pid) {
   $js_url = variable_get('islandora_usage_stats_charts_javascript_url', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js');
   drupal_add_js($js_url, 'external');
 
-  // Get usage stats going back six months, grouped by month.
-  $six_months_ago = $six_monts_ago = strtotime('-6 months', time());
-  $views_result = db_query("SELECT year(FROM_UNIXTIME(time)) AS year, month(FROM_UNIXTIME(time)) AS month, count(*) AS count FROM {islandora_usage_stats_object_access_log} WHERE time BETWEEN :ago AND NOW() AND pid_id = :pid_id GROUP BY month(FROM_UNIXTIME(time))", array(':ago' => $six_months_ago, ':pid_id' => $access_log_id));
+  // Get usage stats going back X months, grouped by month.
+  $num_months = variable_get('islandora_usage_stats_charts_months_to_show', '6');
+  $ago = strtotime('-' . $num_months . ' months', time());
+  $views_result = db_query("SELECT year(FROM_UNIXTIME(time)) AS year, month(FROM_UNIXTIME(time)) AS month, count(*) AS count FROM {islandora_usage_stats_object_access_log} WHERE time BETWEEN :ago AND NOW() AND pid_id = :pid_id GROUP BY month(FROM_UNIXTIME(time))", array(':ago' => $ago, ':pid_id' => $access_log_id));
   $views_data = array();
   foreach ($views_result as $row) {
     $month = str_pad($row->month, 2, '0', STR_PAD_LEFT);
@@ -87,11 +88,11 @@ function islandora_usage_stats_charts_generate_stats($pid) {
   // drupal_alter('islandora_usage_stats_charts_usage', $views_data, $pid, 'views');
   ksort($views_data, SORT_NATURAL);
 
-  // Get the downloads stats going back six months, grouped by month, same
+  // Get the downloads stats going back X months, grouped by month, same
   // as the usage data.
   $downloads_chart_values = array();
   if (variable_get('islandora_usage_stats_charts_show_datastreams_downloads', 1)) {
-    $downloads_result = db_query("SELECT year(FROM_UNIXTIME({islandora_usage_stats_object_ds_access_log}.time)) AS year, month(FROM_UNIXTIME({islandora_usage_stats_object_ds_access_log}.time)) AS month, COUNT(*) AS count FROM {islandora_usage_stats_datastreams}, {islandora_usage_stats_object_ds_access_log} WHERE {islandora_usage_stats_object_ds_access_log}.time BETWEEN :ago AND NOW() AND {islandora_usage_stats_datastreams}.pid_id = :pid_id GROUP BY month(FROM_UNIXTIME({islandora_usage_stats_object_ds_access_log}.time))", array(':ago' => $six_months_ago, ':pid_id' => $access_log_id));
+    $downloads_result = db_query("SELECT year(FROM_UNIXTIME({islandora_usage_stats_object_ds_access_log}.time)) AS year, month(FROM_UNIXTIME({islandora_usage_stats_object_ds_access_log}.time)) AS month, COUNT(*) AS count FROM {islandora_usage_stats_datastreams}, {islandora_usage_stats_object_ds_access_log} WHERE {islandora_usage_stats_object_ds_access_log}.time BETWEEN :ago AND NOW() AND {islandora_usage_stats_datastreams}.pid_id = :pid_id GROUP BY month(FROM_UNIXTIME({islandora_usage_stats_object_ds_access_log}.time))", array(':ago' => $ago, ':pid_id' => $access_log_id));
     $downloads_data = array();
     foreach ($downloads_result as $row) {
       $month = str_pad($row->month, 2, '0', STR_PAD_LEFT);
@@ -150,6 +151,7 @@ function islandora_usage_stats_charts_generate_stats($pid) {
     'viewsColor' => variable_get('islandora_usage_stats_charts_views_color', '#002db3'),
     'downloadsColor' => variable_get('islandora_usage_stats_charts_downloads_color', '#99b3ff'),
     'showDownloads' => variable_get('islandora_usage_stats_charts_show_datastreams_downloads', 0),
+    'numMonthsData' => $num_months,
   );
   drupal_add_js(array('islandora_usage_stats_charts' => $config_settings), 'setting');
   drupal_add_js(
@@ -176,9 +178,10 @@ function islandora_usage_stats_charts_generate_collection_stats($pid) {
   $js_url = variable_get('islandora_usage_stats_charts_javascript_url', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js');
   drupal_add_js($js_url, 'external');
 
-  // Get usage stats going back six months, grouped by month.
-  $six_months_ago = $six_monts_ago = strtotime('-6 months', time());
-  $result = db_query("SELECT year(FROM_UNIXTIME({islandora_usage_stats_object_access_log}.time)) AS year, month(FROM_UNIXTIME({islandora_usage_stats_object_access_log}.time)) AS month, COUNT(*) AS count FROM {islandora_usage_stats_object_access_log}, {islandora_usage_stats_collection_access_log} WHERE {islandora_usage_stats_object_access_log}.time between :ago AND NOW() AND {islandora_usage_stats_collection_access_log}.collection = :collection_id AND {islandora_usage_stats_collection_access_log}.object_access_id = {islandora_usage_stats_object_access_log}.id GROUP BY month(from_unixtime({islandora_usage_stats_object_access_log}.time))", array(':ago' => $six_months_ago, ':collection_id' => $collection_access_log_id));
+  // Get usage stats going back X months, grouped by month.
+  $num_months = variable_get('islandora_usage_stats_charts_months_to_show', '6');
+  $ago = strtotime('-' . $num_months . ' months', time());
+  $result = db_query("SELECT year(FROM_UNIXTIME({islandora_usage_stats_object_access_log}.time)) AS year, month(FROM_UNIXTIME({islandora_usage_stats_object_access_log}.time)) AS month, COUNT(*) AS count FROM {islandora_usage_stats_object_access_log}, {islandora_usage_stats_collection_access_log} WHERE {islandora_usage_stats_object_access_log}.time between :ago AND NOW() AND {islandora_usage_stats_collection_access_log}.collection = :collection_id AND {islandora_usage_stats_collection_access_log}.object_access_id = {islandora_usage_stats_object_access_log}.id GROUP BY month(from_unixtime({islandora_usage_stats_object_access_log}.time))", array(':ago' => $ago, ':collection_id' => $collection_access_log_id));
   $data = array();
   foreach ($result as $row) {
     $month = str_pad($row->month, 2, '0', STR_PAD_LEFT);
@@ -200,6 +203,7 @@ function islandora_usage_stats_charts_generate_collection_stats($pid) {
     'viewsColor' => variable_get('islandora_usage_stats_charts_views_color', '#002db3'),
     'downloadsColor' => variable_get('islandora_usage_stats_charts_downloads_color', '#99b3ff'),
     'showDownloads' => variable_get('islandora_usage_stats_charts_show_datastreams_downloads', 0),
+    'numMonthsData' => $num_months,
   );
   drupal_add_js(array('islandora_usage_stats_charts' => $config_settings), 'setting');
   drupal_add_js(

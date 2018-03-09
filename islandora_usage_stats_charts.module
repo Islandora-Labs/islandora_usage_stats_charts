@@ -48,6 +48,12 @@ function islandora_usage_stats_charts_admin_settings() {
     '#default_value' => variable_get('islandora_usage_stats_charts_downloads_color', '#99b3ff'),
     '#description' => t('Use hexidecimal color values.'),
   );
+  $form['islandora_usage_stats_charts_months_to_show'] = array(
+    '#type' => 'textfield',
+    '#size' => '10',
+    '#title' => t("Number of months' data to show in chart"),
+    '#default_value' => variable_get('islandora_usage_stats_charts_months_to_show', '6'),
+  );
   $form['islandora_usage_stats_charts_show_datastreams_downloads'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show datastream download stats'),

@@ -6,7 +6,7 @@ Displays object (and collection) usage stats collected by [Islandora Usage Stats
 
 ![Example chart](usage_stats_example.png)
 
-Only the last 6 months of data is shown in the chart.
+By default, only the last 6 months of data is shown in the chart, although the number of months can be configured.
 
 ## Dependencies
 
@@ -22,7 +22,7 @@ Install as usual, see [this](https://drupal.org/documentation/install/modules-th
 
 ## Configuration
 
-1. Set the colors for your charts' "views" and "downloads" bars at `admin/islandora/tools/islandora_usage_stats_charts`.
+1. Set the number of months' data, colors for your charts' "views" and "downloads" bars, etc. at `admin/islandora/tools/islandora_usage_stats_charts`.
 1. Enable and configure the "Islandora Usage Stats Charts: object-level report" and "Islandora Usage Stats Charts: collection-level report" blocks.
 1. In the object-level block, you have the option of having the block collapsed or open by default. This setting can be found within the block's "configure" options.
 
