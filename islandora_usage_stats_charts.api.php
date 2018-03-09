@@ -12,8 +12,15 @@
  * Could also be used to filter out unwanted entries.
  *
  * @param array $usage
- *   The array of usage entries managed by Islandora Usage Stats. Each entry has
- *   two keys, 'time' and 'ip'; 'time' must be in Unix epoch format.
+ *   The array of usage entries managed by Islandora Usage Stats. Entries
+ *   looks like this:
+ *     Array
+ *      (
+ *         [2017-12] => 1
+ *         [2018-03] => 2
+ *      )
+ *    The keys are months in yyyy-mm format and the values are the number of
+ *    hits in that month.
  * @param string $pid
  *   The PID of the object the usage data applies to.
  */

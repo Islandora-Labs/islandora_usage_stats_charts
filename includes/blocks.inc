@@ -76,41 +76,50 @@ function islandora_usage_stats_charts_generate_stats($pid) {
   // portable across RDBMSs, but is also probably not possible using
   // Drupal's database API.
   $six_months_ago = $six_monts_ago = strtotime('-6 months', time());
-  $dev_result = db_query("select year(from_unixtime(time)) as year, month(from_unixtime(time)) as month, count(*) as count from {islandora_usage_stats_object_access_log} where time between :ago and now() and pid_id = :pid_id group by month(from_unixtime(time))", array(':ago' => $six_months_ago, ':pid_id' => $access_log_id));
-  $data = array();
-  foreach ($dev_result as $row) {
+  $views_result = db_query("select year(from_unixtime(time)) as year, month(from_unixtime(time)) as month, count(*) as count from {islandora_usage_stats_object_access_log} where time between :ago and now() and pid_id = :pid_id group by month(from_unixtime(time))", array(':ago' => $six_months_ago, ':pid_id' => $access_log_id));
+  $views_data = array();
+  foreach ($views_result as $row) {
     $month = str_pad($row->month, 2, '0', STR_PAD_LEFT);
     $label = $row->year . '-' . $month;
-    $data[$label] = $row->count;
+    $views_data[$label] = $row->count;
   }
-  ksort($data, SORT_NATURAL);
-  $chart_labels = array_keys($data);
-  $chart_values = array_values($data);
+  ksort($views_data, SORT_NATURAL);
+  $chart_labels = array_keys($views_data);
+  $views_chart_values = array_values($views_data);
 
   // Define an alter hook to allow third-party modules to add data from other
   // sources (e.g. gathered outside of Islandora) and merge them with $output.
   // 'time' values should be in Unix epoch format.
-  drupal_alter('islandora_usage_stats_charts_usage', $output, $pid);
+  drupal_alter('islandora_usage_stats_charts_usage', $views_data, $pid);
 
+  $downloads_chart_values = array();
   if (variable_get('islandora_usage_stats_charts_show_datastreams_downloads', 1)) {
-    // @todo: Get datastream download stats and pass to Chart.js.
+    $downloads_result = db_query("SELECT year(from_unixtime({islandora_usage_stats_object_ds_access_log}.time)) as year, month(from_unixtime({islandora_usage_stats_object_ds_access_log}.time)) as month, count(*) as count FROM {islandora_usage_stats_datastreams}, {islandora_usage_stats_object_ds_access_log} WHERE {islandora_usage_stats_object_ds_access_log}.time between :ago and now() AND {islandora_usage_stats_datastreams}.pid_id = :pid_id GROUP BY month(from_unixtime({islandora_usage_stats_object_ds_access_log}.time))", array(':ago' => $six_months_ago, ':pid_id' => $access_log_id));
+    $downloads_data = array();
+    foreach ($downloads_result as $row) {
+      $month = str_pad($row->month, 2, '0', STR_PAD_LEFT);
+      $label = $row->year . '-' . $month;
+      $downloads_data[$label] = $row->count;
+    }
+    dd($downloads_data);
+    // @todo: Populate $downloads_chart_values array so that the members are in the same
+    // order as the corrsponding monthly values of $views_chart_values.
+    $downloads_chart_values = array(12, 13); // test values...
   }
 
   drupal_add_js(drupal_get_path('module', 'islandora_usage_stats_charts') . '/js/usageStatsChart.js', array('scope' => 'footer'));
 
-  $bar_colors = array(
+  $config_settings = array(
     'viewsColor' => variable_get('islandora_usage_stats_charts_views_color', '#002db3'),
     'downloadsColor' => variable_get('islandora_usage_stats_charts_downloads_color', '#99b3ff'),
+    'showDownloads' => variable_get('islandora_usage_stats_charts_show_datastreams_downloads', 0),
   );
-  drupal_add_js(array('islandora_usage_stats_charts' => $bar_colors), 'setting');
-  drupal_add_js(array('islandora_usage_stats_charts' => array('chartLabels' => $chart_labels, 'chartValues' => $chart_values)), 'setting');
+  drupal_add_js(array('islandora_usage_stats_charts' => $config_settings), 'setting');
+  drupal_add_js(array('islandora_usage_stats_charts' => array('chartLabels' => $chart_labels, 'viewsChartValues' => $views_chart_values, 'downloadsChartValues' => $downloads_chart_values)), 'setting');
 
   $collapsed = variable_get('islandora_usage_stats_charts_collapsed', 1) ? 'collapsed' : '';
   $markup = theme('islandora_usage_stats_charts', array(
     'collapsed' => $collapsed,
-    // The 'content' theme variable is inserted into a div with ID
-    // "islandora-usage-stats-charts-content".
-    'content' => '<canvas id="islandoraUsageStatsChart" width="400" height="400"></canvas>',
   ));
   return $markup;
 }
@@ -133,9 +142,6 @@ function islandora_usage_stats_charts_generate_collection_stats($pid) {
   $collapsed = variable_get('islandora_usage_stats_charts_collapsed', 1) ? 'collapsed' : '';
   $markup = theme('islandora_usage_stats_charts', array(
     'collapsed' => $collapsed,
-    // The 'content' theme variable is inserted into a div with ID
-    // "islandora-usage-stats-charts-content".
-    'content' => "Objects in this collection have been accessed " . $count . " times.",
   ));
   return $markup;
 }

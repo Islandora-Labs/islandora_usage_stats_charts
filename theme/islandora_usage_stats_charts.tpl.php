@@ -4,8 +4,6 @@
  * Template file for the Islandora Usage Stats Charts module.
  *
  * Available variables:
- *   $content string
- *     The content of the block.
  *   $collapsed string
  *     The string 'collapsed' or ''.
  */

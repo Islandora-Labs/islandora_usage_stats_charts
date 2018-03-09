@@ -6,6 +6,8 @@ Displays object (and collection) usage stats collected by [Islandora Usage Stats
 
 ![Example chart](usage_stats_example.png)
 
+Only the last 6 months of data is shown in the chart.
+
 ## Dependencies
 
 * [Islandora](https://github.com/Islandora/islandora)
@@ -30,11 +32,9 @@ This module defines a Drupal alter hook that allows third-party modules to alter
 ## To do
 
 * Functionality
-  * Add downloads numbers. Maybe use mappings defined by [Islandora Downloadable Datastreams](https://github.com/bondjimbond/islandora_downloadable_datastreams), and make this module an optional depenedency (i.e., if it isn't installed, you've got to implement your own DS->downloadable file mapping, maybe through a hook we would define?).
-  * Make object-level summary output themeable.
+  * Add a link to output get all the data as a CSV file.
 * Scalability and performance
   * Use Ajax to generate block content so that it doesn't slow down page rendering.
-  * Add admin options to only show stats since a specific date (e.g., a day, week, month, year?)
 * Nice to have
   * Provide admin option to use a local copy of Chart.js.
 

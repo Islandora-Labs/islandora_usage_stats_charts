@@ -63,7 +63,6 @@ function islandora_usage_stats_charts_theme() {
   return array(
     'islandora_usage_stats_charts' => array(
       'variables' => array(
-        'content' => NULL,
         'collapsed' => NULL,
       ),
       'path' => drupal_get_path('module', 'islandora_usage_stats_charts') . '/theme',
