@@ -30,16 +30,6 @@ Install as usual, see [this](https://drupal.org/documentation/install/modules-th
 
 This module defines a Drupal alter hook that allows third-party modules to alter usage data for objects, for example to combine usage data from an external source with the data collected in Islandora Usage Stats database, or to filter out unwanted data. See `islandora_usage_stats_charts.api.php` for more information.
 
-## To do
-
-* Functionality
-  * Add a link to output get all the data as a CSV file.
-  * PostgresQL support.
-* Scalability and performance
-  * Use Ajax to generate block content so that it doesn't slow down page rendering.
-* Nice to have
-  * Provide admin option to use a local copy of Chart.js.
-
 ## Maintainer
 
 * [Mark Jordan](https://github.com/mjordan)

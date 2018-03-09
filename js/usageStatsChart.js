@@ -23,7 +23,7 @@ var usageChart = new Chart(islandoraUsageChart, {
     options: {
         title: {
             display: true,
-            text: 'Note: This is sample data'
+            text: 'Usage stats for the last six months'
         },
         scales: {
             yAxes: [{
