@@ -150,6 +150,7 @@ function islandora_usage_stats_charts_generate_stats($pid) {
   $config_settings = array(
     'viewsColor' => variable_get('islandora_usage_stats_charts_views_color', '#002db3'),
     'downloadsColor' => variable_get('islandora_usage_stats_charts_downloads_color', '#99b3ff'),
+    'limitChartHeight' => variable_get('islandora_usage_stats_charts_limit_chart_height', 1),
     'showDownloads' => variable_get('islandora_usage_stats_charts_show_datastreams_downloads', 0),
     'numMonthsData' => $num_months,
   );
@@ -202,6 +203,7 @@ function islandora_usage_stats_charts_generate_collection_stats($pid) {
   $config_settings = array(
     'viewsColor' => variable_get('islandora_usage_stats_charts_views_color', '#002db3'),
     'downloadsColor' => variable_get('islandora_usage_stats_charts_downloads_color', '#99b3ff'),
+    'limitChartHeight' => variable_get('islandora_usage_stats_charts_limit_chart_height', 1),
     'showDownloads' => variable_get('islandora_usage_stats_charts_show_datastreams_downloads', 0),
     'numMonthsData' => $num_months,
   );

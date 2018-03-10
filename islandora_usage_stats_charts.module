@@ -48,6 +48,12 @@ function islandora_usage_stats_charts_admin_settings() {
     '#default_value' => variable_get('islandora_usage_stats_charts_downloads_color', '#99b3ff'),
     '#description' => t('Use hexidecimal color values.'),
   );
+  $form['islandora_usage_stats_charts_limit_chart_height'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Limit chart height to its width'),
+    '#default_value' => variable_get('islandora_usage_stats_charts_limit_chart_height', 1),
+    '#description' => t("Wide variations in monthly usage stats can result in charts that have a very high vertical dimension. Checking this option will ensure that the chart's height does not exceed its width."),
+  );
   $form['islandora_usage_stats_charts_months_to_show'] = array(
     '#type' => 'textfield',
     '#size' => '10',
