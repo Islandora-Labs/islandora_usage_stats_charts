@@ -39,14 +39,14 @@ function islandora_usage_stats_charts_admin_settings() {
     '#size' => '10',
     '#title' => t('Color of "views" bar in chart'),
     '#default_value' => variable_get('islandora_usage_stats_charts_views_color', '#002db3'),
-    '#description' => t('Use hexidecimal color values.'),
+    '#description' => t('You can use hexadecimal, RGB, or HSL color values.'),
   );
   $form['islandora_usage_stats_charts_downloads_color'] = array(
     '#type' => 'textfield',
     '#size' => '10',
     '#title' => t('Color of "downloads" bar in chart'),
     '#default_value' => variable_get('islandora_usage_stats_charts_downloads_color', '#99b3ff'),
-    '#description' => t('Use hexidecimal color values.'),
+    '#description' => t('You can use hexadecimal, RGB, or HSL color values.'),
   );
   $form['islandora_usage_stats_charts_limit_chart_height'] = array(
     '#type' => 'checkbox',
