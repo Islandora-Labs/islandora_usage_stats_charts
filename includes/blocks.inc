@@ -41,29 +41,6 @@ function islandora_usage_stats_charts_block_view($delta = '') {
 }
 
 /**
- * Implements hook_block_configure().
- */
-function islandora_usage_stats_charts_block_configure($delta) {
-  if ($delta == 'object') {
-    $form['islandora_usage_stats_charts_collapsed'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Collapse usage stats chart block by default (user can toggle)'),
-      '#default_value' => variable_get('islandora_usage_stats_charts_collapsed', 1),
-    );
-    return $form;
-  }
-}
-
-/**
- * Implements hook_block_save().
- */
-function islandora_usage_stats_charts_block_save($delta = '', $edit = array()) {
-  if ($delta == 'object') {
-    variable_set('islandora_usage_stats_charts_collapsed', (int) $edit['islandora_usage_stats_charts_collapsed']);
-  }
-}
-
-/**
  * Populate the usage statistics block for non-collection objects.
  */
 function islandora_usage_stats_charts_generate_stats($pid) {
