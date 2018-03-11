@@ -49,15 +49,23 @@ function islandora_usage_stats_charts_generate_stats($pid) {
   $js_url = variable_get('islandora_usage_stats_charts_javascript_url', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js');
   drupal_add_js($js_url, 'external');
 
-  // Get usage stats going back X months, grouped by month.
+  // Get usage stats going back X months and group them by month.
   $num_months = variable_get('islandora_usage_stats_charts_months_to_show', '6');
   $ago = strtotime('-' . $num_months . ' months', time());
-  $views_result = db_query("SELECT year(FROM_UNIXTIME(time)) AS year, month(FROM_UNIXTIME(time)) AS month, count(*) AS count FROM {islandora_usage_stats_object_access_log} WHERE time BETWEEN :ago AND NOW() AND pid_id = :pid_id GROUP BY month(FROM_UNIXTIME(time))", array(':ago' => $ago, ':pid_id' => $access_log_id));
+  $views_result = db_select('islandora_usage_stats_object_access_log')
+    ->fields('islandora_usage_stats_object_access_log', array('time'))
+    ->condition('pid_id', $access_log_id)
+    ->condition('time', array($ago, time()), 'BETWEEN')
+    ->execute();
   $views_data = array();
   foreach ($views_result as $row) {
-    $month = str_pad($row->month, 2, '0', STR_PAD_LEFT);
-    $label = $row->year . '-' . $month;
-    $views_data[$label] = $row->count;
+    $label = date("Y-m", $row->time);
+    if (array_key_exists($label, $views_data)) {
+      $views_data[$label]++;
+    }
+    else {
+      $views_data[$label] = 1;
+    }
   }
 
   // Define an alter hook to allow third-party modules to add data from other
@@ -65,16 +73,24 @@ function islandora_usage_stats_charts_generate_stats($pid) {
   // drupal_alter('islandora_usage_stats_charts_usage', $views_data, $pid, 'views');
   ksort($views_data, SORT_NATURAL);
 
-  // Get the downloads stats going back X months, grouped by month, same
-  // as the usage data.
+  // Get the downloads stats going back X months and group them by month.
   $downloads_chart_values = array();
+  $placeholders = array(
+    ':ago' => $ago,
+    ':now' => time(),
+    ':pid_id' => $access_log_id,
+  );
   if (variable_get('islandora_usage_stats_charts_show_datastreams_downloads', 1)) {
-    $downloads_result = db_query("SELECT year(FROM_UNIXTIME({islandora_usage_stats_object_ds_access_log}.time)) AS year, month(FROM_UNIXTIME({islandora_usage_stats_object_ds_access_log}.time)) AS month, COUNT(*) AS count FROM {islandora_usage_stats_datastreams}, {islandora_usage_stats_object_ds_access_log} WHERE {islandora_usage_stats_object_ds_access_log}.time BETWEEN :ago AND NOW() AND {islandora_usage_stats_datastreams}.pid_id = :pid_id GROUP BY month(FROM_UNIXTIME({islandora_usage_stats_object_ds_access_log}.time))", array(':ago' => $ago, ':pid_id' => $access_log_id));
+    $downloads_result = db_query("SELECT time FROM {islandora_usage_stats_datastreams}, {islandora_usage_stats_object_ds_access_log} WHERE {islandora_usage_stats_object_ds_access_log}.time BETWEEN :ago AND :now AND {islandora_usage_stats_datastreams}.pid_id = :pid_id", $placeholders);
     $downloads_data = array();
     foreach ($downloads_result as $row) {
-      $month = str_pad($row->month, 2, '0', STR_PAD_LEFT);
-      $label = $row->year . '-' . $month;
-      $downloads_data[$label] = $row->count;
+      $label = date("Y-m", $row->time);
+      if (array_key_exists($label, $downloads_data)) {
+        $downloads_data[$label]++;
+      }
+      else {
+        $downloads_data[$label] = 1;
+      }
     }
 
     // Define an alter hook to allow third-party modules to add data from other
@@ -156,15 +172,24 @@ function islandora_usage_stats_charts_generate_collection_stats($pid) {
   $js_url = variable_get('islandora_usage_stats_charts_javascript_url', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js');
   drupal_add_js($js_url, 'external');
 
-  // Get usage stats going back X months, grouped by month.
+  // Get usage stats going back X months and group them by month.
   $num_months = variable_get('islandora_usage_stats_charts_months_to_show', '6');
   $ago = strtotime('-' . $num_months . ' months', time());
-  $result = db_query("SELECT year(FROM_UNIXTIME({islandora_usage_stats_object_access_log}.time)) AS year, month(FROM_UNIXTIME({islandora_usage_stats_object_access_log}.time)) AS month, COUNT(*) AS count FROM {islandora_usage_stats_object_access_log}, {islandora_usage_stats_collection_access_log} WHERE {islandora_usage_stats_object_access_log}.time between :ago AND NOW() AND {islandora_usage_stats_collection_access_log}.collection = :collection_id AND {islandora_usage_stats_collection_access_log}.object_access_id = {islandora_usage_stats_object_access_log}.id GROUP BY month(from_unixtime({islandora_usage_stats_object_access_log}.time))", array(':ago' => $ago, ':collection_id' => $collection_access_log_id));
+  $placeholders = array(
+    ':ago' => $ago,
+    ':now' => time(),
+    ':collection_id' => $collection_access_log_id,
+  );
+  $result = db_query('SELECT time FROM {islandora_usage_stats_object_access_log}, {islandora_usage_stats_collection_access_log} WHERE {islandora_usage_stats_object_access_log}.time between :ago AND :now AND {islandora_usage_stats_collection_access_log}.collection = :collection_id AND {islandora_usage_stats_collection_access_log}.object_access_id = {islandora_usage_stats_object_access_log}.id', $placeholders);
   $data = array();
   foreach ($result as $row) {
-    $month = str_pad($row->month, 2, '0', STR_PAD_LEFT);
-    $label = $row->year . '-' . $month;
-    $data[$label] = $row->count;
+    $label = date("Y-m", $row->time);
+    if (array_key_exists($label, $data)) {
+      $data[$label]++;
+    }
+    else {
+      $data[$label] = 1;
+    }
   }
 
   // Define an alter hook to allow third-party modules to add data from other
@@ -181,7 +206,7 @@ function islandora_usage_stats_charts_generate_collection_stats($pid) {
     'viewsColor' => variable_get('islandora_usage_stats_charts_views_color', '#002db3'),
     'downloadsColor' => variable_get('islandora_usage_stats_charts_downloads_color', '#99b3ff'),
     'limitChartHeight' => variable_get('islandora_usage_stats_charts_limit_chart_height', 1),
-    'showDownloads' => variable_get('islandora_usage_stats_charts_show_datastreams_downloads', 0),
+    'showDownloads' => 0,
     'numMonthsData' => $num_months,
   );
   drupal_add_js(array('islandora_usage_stats_charts' => $config_settings), 'setting');
