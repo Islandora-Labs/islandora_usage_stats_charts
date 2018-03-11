@@ -70,7 +70,8 @@ function islandora_usage_stats_charts_generate_stats($pid) {
 
   // Define an alter hook to allow third-party modules to add data from other
   // sources (e.g. gathered outside of Islandora) and merge them with $output.
-  // drupal_alter('islandora_usage_stats_charts_usage', $views_data, $pid, 'views');
+  $context = array('pid' => $pid, 'type' => 'views');
+  drupal_alter('islandora_usage_stats_charts_usage', $views_data, $context);
   ksort($views_data, SORT_NATURAL);
 
   // Get the downloads stats going back X months and group them by month.
@@ -95,7 +96,8 @@ function islandora_usage_stats_charts_generate_stats($pid) {
 
     // Define an alter hook to allow third-party modules to add data from other
     // sources (e.g. gathered outside of Islandora) and merge them with $output.
-    // drupal_alter('islandora_usage_stats_charts_usage', $downloads_data, $pid, 'downloads');
+    $context = array('pid' => $pid, 'type' => 'downloads');
+    drupal_alter('islandora_usage_stats_charts_usage', $downloads_data, $context);
     ksort($downloads_data, SORT_NATURAL);
   }
 
@@ -194,7 +196,8 @@ function islandora_usage_stats_charts_generate_collection_stats($pid) {
 
   // Define an alter hook to allow third-party modules to add data from other
   // sources (e.g. gathered outside of Islandora) and merge them with $output.
-  // drupal_alter('islandora_usage_stats_charts_usage', $data, $pid, 'collections');
+  $context = array('pid' => $pid, 'type' => 'collections');
+  drupal_alter('islandora_usage_stats_charts_usage', $data, $pid, $context);
   ksort($data, SORT_NATURAL);
 
   $chart_labels = array_keys($data);

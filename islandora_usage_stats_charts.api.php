@@ -21,12 +21,13 @@
  *      )
  *    The keys are months in yyyy-mm format and the values are the number of
  *    hits in that month.
- * @param string $pid
- *   The PID of the object the usage data applies to.
- * @param string $type
- *   One of 'views', 'downloads', or 'collections'.
+ * @param arrary $context
+ *   Contains two keys, 'pid' and 'type'. 'pid' is the PID of the object,
+ *   and 'type' is one of 'views', 'downloads', or 'collections'.
  */
-function mymodule_islandora_usage_stats_charts_usage_alter(&$usage, &$pid, $type) {
+function mymodule_islandora_usage_stats_charts_usage_alter(&$usage, &$context) {
   // Add a view data point.
-  $usage[] = array('1999-12' => 1);
+  if ($type == 'views' and $context['pid'] == 'islandora:100') {
+    $usage[] = array('1999-12' => 1);
+  }
 }
