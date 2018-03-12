@@ -27,13 +27,13 @@ function islandora_usage_stats_charts_block_info() {
 function islandora_usage_stats_charts_block_view($delta = '') {
   $object = menu_get_object('islandora_object', 2);
   if ($delta == 'object') {
-    if ($object && !in_array('islandora:collectionCModel', $object->models)) {
+    if ($object && !in_array('islandora:collectionCModel', $object->models) && arg(3) != 'manage') {
       $block['content'] = islandora_usage_stats_charts_generate_stats($object->id);
       return $block;
     }
   }
   if ($delta == 'collection') {
-    if ($object && in_array('islandora:collectionCModel', $object->models)) {
+    if ($object && in_array('islandora:collectionCModel', $object->models) && arg(3) != 'manage') {
       $block['content'] = islandora_usage_stats_charts_generate_collection_stats($object->id);
       return $block;
     }
