@@ -17,13 +17,19 @@ if (Drupal.settings.islandora_usage_stats_charts.showDownloads) {
   usageData.datasets.push(downloadsData);
 }
 
+if (usageData.labels.length < Drupal.settings.islandora_usage_stats_charts.numMonthsData) {
+    numMonths = usageData.labels.length;
+} else {
+    numMonths = Drupal.settings.islandora_usage_stats_charts.numMonthsData;
+}
+
 var usageChart = new Chart(islandoraUsageChart, {
     type: 'bar',
     data: usageData,
     options: {
         title: {
             display: true,
-            text: 'Usage stats for the last ' + Drupal.settings.islandora_usage_stats_charts.numMonthsData + ' months'
+            text: 'Usage stats for the last ' + numMonths + ' months'
         },
         scales: {
             yAxes: [{
