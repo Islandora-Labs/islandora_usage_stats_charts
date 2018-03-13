@@ -37,6 +37,9 @@ var usageChart = new Chart(islandoraUsageChart, {
     }
 });
 
+if (Drupal.settings.islandora_usage_stats_charts.chartWidth.length) {
+    usageChart.canvas.parentNode.style.width = Drupal.settings.islandora_usage_stats_charts.chartWidth;
+}
 if (Drupal.settings.islandora_usage_stats_charts.limitChartHeight) {
     usageChart.canvas.parentNode.style.height = usageChart.canvas.parentNode.style.width;
 }

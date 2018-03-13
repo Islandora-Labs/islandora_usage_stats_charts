@@ -48,6 +48,13 @@ function islandora_usage_stats_charts_admin_settings() {
     '#default_value' => variable_get('islandora_usage_stats_charts_downloads_color', '#99b3ff'),
     '#description' => t('You can use hexadecimal, RGB, or HSL color values.'),
   );
+  $form['islandora_usage_stats_charts_max_chart_width'] = array(
+    '#type' => 'textfield',
+    '#size' => '10',
+    '#title' => t('Maximum width of chart, with units'),
+    '#default_value' => variable_get('islandora_usage_stats_charts_max_chart_width', '50em'),
+    '#description' => t('E.g. 50em, 400px. Leave blank to allow the chart to fill the parent div.'),
+  );
   $form['islandora_usage_stats_charts_limit_chart_height'] = array(
     '#type' => 'checkbox',
     '#title' => t('Limit chart height to its width'),
@@ -82,6 +89,7 @@ function islandora_usage_stats_charts_theme() {
     'islandora_usage_stats_charts' => array(
       'variables' => array(
         'collapsed' => NULL,
+        'csv_link' => NULL,
       ),
       'path' => drupal_get_path('module', 'islandora_usage_stats_charts') . '/theme',
       'template' => 'islandora_usage_stats_charts',

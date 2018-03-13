@@ -145,6 +145,7 @@ function islandora_usage_stats_charts_generate_stats($pid) {
   $config_settings = array(
     'viewsColor' => variable_get('islandora_usage_stats_charts_views_color', '#002db3'),
     'downloadsColor' => variable_get('islandora_usage_stats_charts_downloads_color', '#99b3ff'),
+    'chartWidth' => variable_get('islandora_usage_stats_charts_max_chart_width', '50'),
     'limitChartHeight' => variable_get('islandora_usage_stats_charts_limit_chart_height', 1),
     'showDownloads' => variable_get('islandora_usage_stats_charts_show_datastreams_downloads', 0),
     'numMonthsData' => $num_months,
@@ -159,8 +160,16 @@ function islandora_usage_stats_charts_generate_stats($pid) {
       )), 'setting');
 
   $collapsed = variable_get('islandora_usage_stats_charts_collapsed', 1) ? 'collapsed' : '';
+  if (module_exists('islandora_usage_stats_csv')) {
+     drupal_add_css(drupal_get_path('module', 'islandora_usage_stats_charts') . '/css/islandora_usage_stats_charts.css');
+     $object = islandora_object_load($pid);
+     if (islandora_object_access('download islandora usage stats data', $object)) {
+       $csv_link = l(t('Download CSV containing full usage stats'), '/islandora/object/' . $pid . '/usage_stats_csv');
+     }
+  }
   $markup = theme('islandora_usage_stats_charts', array(
     'collapsed' => $collapsed,
+    'csv_link' => $csv_link,
   ));
   return $markup;
 }
@@ -208,6 +217,7 @@ function islandora_usage_stats_charts_generate_collection_stats($pid) {
   $config_settings = array(
     'viewsColor' => variable_get('islandora_usage_stats_charts_views_color', '#002db3'),
     'downloadsColor' => variable_get('islandora_usage_stats_charts_downloads_color', '#99b3ff'),
+    'chartWidth' => variable_get('islandora_usage_stats_charts_max_chart_width', '50'),
     'limitChartHeight' => variable_get('islandora_usage_stats_charts_limit_chart_height', 1),
     'showDownloads' => 0,
     'numMonthsData' => $num_months,
