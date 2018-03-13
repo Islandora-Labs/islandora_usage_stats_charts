@@ -6,6 +6,8 @@
  * Available variables:
  *   $collapsed string
  *     The string 'collapsed' or ''.
+ *   $csv_link string
+ *     The link to the CSV file.
  */
 ?>
 <fieldset class="islandora collapsible <?php print $collapsed; ?>">

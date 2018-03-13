@@ -233,6 +233,7 @@ function islandora_usage_stats_charts_generate_collection_stats($pid) {
   $collapsed = variable_get('islandora_usage_stats_charts_collapsed', 1) ? 'collapsed' : '';
   $markup = theme('islandora_usage_stats_charts', array(
     'collapsed' => $collapsed,
+    'csv_link' => NULL,
   ));
   return $markup;
 }
