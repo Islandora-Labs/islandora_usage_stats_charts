@@ -12,9 +12,8 @@
 ?>
 <fieldset class="islandora collapsible <?php print $collapsed; ?>">
   <legend><span class="fieldset-legend"><?php print t('Usage statistics'); ?></span></legend>
-  <div class="fieldset-wrapper" id="islandora-usage-stats-charts-content"><canvas id="islandora-usage-stats-chart" width="400" height="400"></canvas>
+  <div class="fieldset-wrapper" id="islandora-usage-stats-charts-content"><canvas id="islandora-usage-stats-chart" width="400" height="400"></canvas></div>
   <?php if ($csv_link): ?>
     <div id="islandora-usage-stats-charts-csv-download"><?php print $csv_link; ?></div>
   <?php endif; ?>
-  </div>
 </fieldset>

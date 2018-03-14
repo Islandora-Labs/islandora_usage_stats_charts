@@ -2,6 +2,18 @@
   Islandora Usage Stats Charts CSS
  */
 
+#islandora-usage-stats-charts-content {
+}
+
+#islandora-usage-stats-chart {
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin:auto;
+}
+
 #islandora-usage-stats-charts-csv-download {
-  padding-left: 1em;
+  text-align: center;
 }
