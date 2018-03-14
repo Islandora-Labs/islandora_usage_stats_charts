@@ -1,3 +1,8 @@
+/*
+@file
+Javascript that renders a Chart.js chart of monthly usage data from Islandora Usage Statistics.
+*/
+
 var islandoraUsageChart = document.getElementById('islandora-usage-stats-chart');
 
 var usageData = {
@@ -17,13 +22,25 @@ if (Drupal.settings.islandora_usage_stats_charts.showDownloads) {
   usageData.datasets.push(downloadsData);
 }
 
+// Override the Drupal admin setting that defines how many months' worth of data
+// to include in the chart, if the number of months available is lower. The number
+// of months is also used in the chart's title.
 if (usageData.labels.length < Drupal.settings.islandora_usage_stats_charts.numMonthsData) {
     numMonths = usageData.labels.length;
 } else {
     numMonths = Drupal.settings.islandora_usage_stats_charts.numMonthsData;
 }
 
-var usageChart = new Chart(islandoraUsageChart, {
+// By default, Chart.js's Y axis shows decimal point if the value is less than 10. We don't want that.
+if (Math.max.apply(Math, Drupal.settings.islandora_usage_stats_charts.viewsChartValues) < 10
+  || Math.max.apply(Math, Drupal.settings.islandora_usage_stats_charts.downloadsChartValues) < 10) {
+  var stepSizeValue = 1;
+} else {
+  var stepSizeValue = null;
+}
+
+// Render the chart.
+usageChart = new Chart(islandoraUsageChart, {
     type: 'bar',
     data: usageData,
     options: {
@@ -35,19 +52,17 @@ var usageChart = new Chart(islandoraUsageChart, {
             yAxes: [{
                 ticks: {
                     beginAtZero: true,
-                    // @todo: change stepSize to 1 if there are fewer than 10 usages.
-                    // stepSize: 1 
+                    stepSize: stepSizeValue,
                 }
             }]
         }
     }
 });
 
+// Size controls.
 if (Drupal.settings.islandora_usage_stats_charts.chartWidth.length) {
     usageChart.canvas.parentNode.style.width = Drupal.settings.islandora_usage_stats_charts.chartWidth;
 }
 if (Drupal.settings.islandora_usage_stats_charts.limitChartHeight) {
     usageChart.canvas.parentNode.style.height = usageChart.canvas.parentNode.style.width;
 }
-
-
