@@ -44,6 +44,8 @@ function islandora_usage_stats_charts_block_view($delta = '') {
  * Populate the usage statistics block for non-collection objects.
  */
 function islandora_usage_stats_charts_generate_stats($pid) {
+  drupal_add_js('misc/collapse.js');
+  drupal_add_js('misc/form.js');
   $access_log_id = islandora_usage_stats_charts_get_object_access_id($pid);
 
   $js_url = variable_get('islandora_usage_stats_charts_javascript_url', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js');
@@ -179,6 +181,8 @@ function islandora_usage_stats_charts_generate_stats($pid) {
  * Populate the usage statistics block for collection objects.
  */
 function islandora_usage_stats_charts_generate_collection_stats($pid) {
+  drupal_add_js('misc/collapse.js');
+  drupal_add_js('misc/form.js');
   $collection_access_log_id = islandora_usage_stats_charts_get_object_access_id($pid);
 
   $js_url = variable_get('islandora_usage_stats_charts_javascript_url', 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js');
