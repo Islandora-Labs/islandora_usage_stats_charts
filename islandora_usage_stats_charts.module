@@ -79,6 +79,19 @@ function islandora_usage_stats_charts_admin_settings() {
     '#title' => t('Show datastream download stats'),
     '#default_value' => variable_get('islandora_usage_stats_charts_show_datastreams_downloads', 0),
   );
+  if (module_exists('islandora_usage_stats_csv')) {
+    $other_setting_note = t("This setting should be the same as the 'Omit from datastream reports' setting used by Islandora Usage Stats CSV.");
+  }
+  else {
+    $other_setting_note = '';
+  }
+  $form['islandora_usage_stats_charts_dsids_to_skip'] = array(
+    '#type' => 'textfield',
+    '#size' => '100',
+    '#title' => t('Omit from downloads stats'),
+    '#default_value' => variable_get('islandora_usage_stats_charts_dsids_to_skip', 'RELS-EXT,RELS-INT,TECHMD,MODS,DC'),
+    '#description' => t("Comma-separated list of datastream IDs to exclude from 'downloads' usage stats. All other datastreams will be included. If left blank, all datastreams will be included. !other_setting_note", array('!other_setting_note' => $other_setting_note)),
+  );
   return system_settings_form($form);
 }
 
