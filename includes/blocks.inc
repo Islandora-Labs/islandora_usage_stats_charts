@@ -89,10 +89,10 @@ function islandora_usage_stats_charts_generate_stats($pid) {
     if (strlen($dsids_to_exclude)) {
       $dsids_to_exclude_array = explode(',', $dsids_to_exclude);
       $placeholders[':excluded_dsids'] = $dsids_to_exclude_array;
-      $downloads_result = db_query("SELECT dsid,time FROM {islandora_usage_stats_datastreams}, {islandora_usage_stats_object_ds_access_log} WHERE {islandora_usage_stats_object_ds_access_log}.time BETWEEN :ago AND :now AND {islandora_usage_stats_datastreams}.pid_id = :pid_id AND dsid NOT IN (:excluded_dsids)", $placeholders);
+      $downloads_result = db_query("SELECT dsid,time FROM {islandora_usage_stats_datastreams}, {islandora_usage_stats_object_ds_access_log} WHERE {islandora_usage_stats_object_ds_access_log}.time BETWEEN :ago AND :now AND {islandora_usage_stats_datastreams}.pid_id = :pid_id AND {islandora_usage_stats_datastreams}.id = {islandora_usage_stats_object_ds_access_log}.ds_id AND dsid NOT IN (:excluded_dsids)", $placeholders);
     }
     else {
-      $downloads_result = db_query("SELECT time FROM {islandora_usage_stats_datastreams}, {islandora_usage_stats_object_ds_access_log} WHERE {islandora_usage_stats_object_ds_access_log}.time BETWEEN :ago AND :now AND {islandora_usage_stats_datastreams}.pid_id = :pid_id", $placeholders);
+      $downloads_result = db_query("SELECT time FROM {islandora_usage_stats_datastreams}, {islandora_usage_stats_object_ds_access_log} WHERE {islandora_usage_stats_object_ds_access_log}.time BETWEEN :ago AND :now AND {islandora_usage_stats_datastreams}.pid_id = :pid_id AND {islandora_usage_stats_datastreams}.id = {islandora_usage_stats_object_ds_access_log}.ds_id", $placeholders);
     }
 
     $downloads_data = array();
