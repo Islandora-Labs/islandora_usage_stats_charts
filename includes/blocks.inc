@@ -70,6 +70,8 @@ function islandora_usage_stats_charts_generate_stats($pid) {
     }
   }
 
+  $views_data = array_slice($views_data, -$num_months);
+
   // Define an alter hook to allow third-party modules to add data from other
   // sources (e.g. gathered outside of Islandora) and merge them with $output.
   $context = array('pid' => $pid, 'type' => 'views');
