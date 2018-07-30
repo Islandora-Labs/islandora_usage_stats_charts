@@ -33,10 +33,10 @@ if (usageData.labels.length < Drupal.settings.islandora_usage_stats_charts.numMo
 
 var maxViewsCount = Math.max.apply(Math, Drupal.settings.islandora_usage_stats_charts.viewsChartValues);
 var maxDownloadsCount = Math.max.apply(Math, Drupal.settings.islandora_usage_stats_charts.downloadsChartValues);
-// By default, Chart.js's Y axis shows decimal point if the value is less than 10. We don't want that.
-if (maxViewsCount > 100 || maxDownloadsCount > 100) {
-  var stepSizeValue = maxViewsCount / 10;
 // If the number of hits is large, make the step size large. We want at most 10 steps.
+if (maxViewsCount > 60 || maxDownloadsCount > 60) {
+  var stepSizeValue = maxViewsCount / 10;
+// By default, Chart.js's Y axis shows decimal point if the value is less than 10. We don't want that.
 } else if (maxViewsCount < 10 || maxDownloadsCount < 10) {
   var stepSizeValue = 1;
 } else {
