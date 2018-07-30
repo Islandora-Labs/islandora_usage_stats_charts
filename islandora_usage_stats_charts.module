@@ -70,9 +70,9 @@ function islandora_usage_stats_charts_admin_settings() {
   $form['islandora_usage_stats_charts_months_to_show'] = array(
     '#type' => 'textfield',
     '#size' => '10',
-    '#title' => t("Number of months' data to show in chart"),
+    '#title' => t("Maximum number of months' data to show in chart"),
     '#default_value' => variable_get('islandora_usage_stats_charts_months_to_show', '6'),
-    '#description' => t("If the number of months for which data is available is lower than this setting, that number of months is used."),
+    '#description' => t("If the number of months for which data is available is lower than this setting, the lower number of months is used. Stats are shown from the day of the first month corresponding to the day the user views the chart; for example, if this setting is '6' and the chart is viewed on July 10th, the first month's stats will start at February 10th."),
   );
   $form['islandora_usage_stats_charts_show_datastreams_downloads'] = array(
     '#type' => 'checkbox',
