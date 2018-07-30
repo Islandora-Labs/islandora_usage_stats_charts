@@ -70,13 +70,14 @@ function islandora_usage_stats_charts_generate_stats($pid) {
     }
   }
 
-  $views_data = array_slice($views_data, -$num_months);
-
   // Define an alter hook to allow third-party modules to add data from other
   // sources (e.g. gathered outside of Islandora) and merge them with $output.
   $context = array('pid' => $pid, 'type' => 'views');
   drupal_alter('islandora_usage_stats_charts_usage', $views_data, $context);
   ksort($views_data, SORT_NATURAL);
+
+  // To make sure we display the correct number of months.
+  $views_data = array_slice($views_data, -$num_months);
 
   // Get the downloads stats going back X months and group them by month.
   $downloads_chart_values = array();
@@ -113,6 +114,9 @@ function islandora_usage_stats_charts_generate_stats($pid) {
     $context = array('pid' => $pid, 'type' => 'downloads');
     drupal_alter('islandora_usage_stats_charts_usage', $downloads_data, $context);
     ksort($downloads_data, SORT_NATURAL);
+
+    // To make sure we display the correct number of months.
+    $downloads_data = array_slice($downloads_data, -$num_months);
   }
 
   // First, assemble the labels from the keys of the views and downloads arrays.
@@ -140,7 +144,9 @@ function islandora_usage_stats_charts_generate_stats($pid) {
         $views_chart_values[] = 0;
       }
     }
+
     $download_chart_values = array();
+
     foreach ($chart_labels as $label) {
       if (array_key_exists($label, $downloads_data)) {
         $downloads_chart_values[] = $downloads_data[$label];
@@ -225,6 +231,9 @@ function islandora_usage_stats_charts_generate_collection_stats($pid) {
   $context = array('pid' => $pid, 'type' => 'collections');
   drupal_alter('islandora_usage_stats_charts_usage', $data, $pid, $context);
   ksort($data, SORT_NATURAL);
+
+  // To make sure we display the correct number of months.
+  $data = array_slice($data, -$num_months);
 
   $chart_labels = array_keys($data);
   $views_chart_values = array_values($data);
