@@ -229,7 +229,7 @@ function islandora_usage_stats_charts_generate_collection_stats($pid) {
   // Define an alter hook to allow third-party modules to add data from other
   // sources (e.g. gathered outside of Islandora) and merge them with $output.
   $context = array('pid' => $pid, 'type' => 'collections');
-  drupal_alter('islandora_usage_stats_charts_usage', $data, $pid, $context);
+  drupal_alter('islandora_usage_stats_charts_usage', $data, $context);
   ksort($data, SORT_NATURAL);
 
   // To make sure we display the correct number of months.
