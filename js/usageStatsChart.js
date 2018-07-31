@@ -40,13 +40,14 @@ if (Math.max.apply(Math, Drupal.settings.islandora_usage_stats_charts.viewsChart
 }
 
 // Render the chart.
+var chartTitle = Drupal.t('Usage stats for the last @num months', {'@num': numMonths});
 usageChart = new Chart(islandoraUsageChart, {
     type: 'bar',
     data: usageData,
     options: {
         title: {
             display: true,
-            text: 'Usage stats for the last ' + numMonths + ' months'
+            text: chartTitle,
         },
         scales: {
             yAxes: [{
