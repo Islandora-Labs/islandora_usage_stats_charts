@@ -26,20 +26,29 @@ if (Drupal.settings.islandora_usage_stats_charts.showDownloads) {
 // to include in the chart, if the number of months available is lower. The number
 // of months is also used in the chart's title.
 if (usageData.labels.length < Drupal.settings.islandora_usage_stats_charts.numMonthsData) {
-    numMonths = usageData.labels.length;
+    var numMonths = usageData.labels.length;
 } else {
-    numMonths = Drupal.settings.islandora_usage_stats_charts.numMonthsData;
+    var numMonths = Drupal.settings.islandora_usage_stats_charts.numMonthsData;
 }
 
-// By default, Chart.js's Y axis shows decimal point if the value is less than 10. We don't want that.
-if (Math.max.apply(Math, Drupal.settings.islandora_usage_stats_charts.viewsChartValues) < 10
-  || Math.max.apply(Math, Drupal.settings.islandora_usage_stats_charts.downloadsChartValues) < 10) {
+// Adapt the Chart.js Y axis 'stepSize' to the range of values in our data. First, get 
+// the maximum values in either the views or downloads data. We'll base our stepSize on
+// the highest value we have.
+var maxViewsCount = Math.max.apply(Math, Drupal.settings.islandora_usage_stats_charts.viewsChartValues);
+var maxDownloadsCount = Math.max.apply(Math, Drupal.settings.islandora_usage_stats_charts.downloadsChartValues);
+var higherCount = Math.max.apply(Math, [maxViewsCount, maxDownloadsCount]);
+// If the number of views or downloads is large, adjust the stepSize so that it's 1/10 of the number.
+if (higherCount > 50) {
+  var stepSizeValue = higherCount / 10;
+// By default, the Y axis shows decimal point if the value is less than 10. We don't want that.
+} else if (higherCount < 10) {
   var stepSizeValue = 1;
 } else {
+  // Use the default.
   var stepSizeValue = null;
 }
 
-// Render the chart.
+// Render the chart using the Chart.js API.
 var chartTitle = Drupal.t('Usage stats for the last @num months', {'@num': numMonths});
 usageChart = new Chart(islandoraUsageChart, {
     type: 'bar',
