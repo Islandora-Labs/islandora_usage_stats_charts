@@ -33,7 +33,8 @@ function islandora_usage_stats_charts_block_view($delta = '') {
     }
   }
   if ($delta == 'collection') {
-    if ($object && in_array('islandora:collectionCModel', $object->models) && arg(3) != 'manage') {
+    $url_params = drupal_get_query_parameters();
+    if ($object && in_array('islandora:collectionCModel', $object->models) && arg(3) != 'manage' && !array_key_exists('page', $url_params)) {
       $block['content'] = islandora_usage_stats_charts_generate_collection_stats($object->id);
       return $block;
     }
