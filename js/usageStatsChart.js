@@ -40,7 +40,6 @@ var higherCount = Math.max.apply(Math, [maxViewsCount, maxDownloadsCount]);
 // If the number of views or downloads is large, adjust the stepSize so that it's 1/10 of the number.
 if (higherCount > 50) {
   var stepSizeValue = higherCount / 10;
-  console.log(stepSizeValue);
   // Make steps round numbers.
   stepSizeValue = Math.ceil(stepSizeValue / 100) * 100;
 // By default, the Y axis shows decimal point if the value is less than 10. We don't want that.
