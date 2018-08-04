@@ -189,8 +189,17 @@ function islandora_usage_stats_charts_generate_stats($pid) {
       $csv_link = l(t('Download CSV containing full usage stats'), '/islandora/object/' . $pid . '/usage_stats_csv');
     }
   }
+
+  if (empty($views_chart_values)) {
+    $content = '<div>' . t("There is no usage data for this item.") . '<div>';
+  }
+  else {
+    $content = '<canvas id="islandora-usage-stats-chart" height="400px" width="400px"></canvas>';
+  }
+
   $markup = theme('islandora_usage_stats_charts', array(
     'collapsed' => $collapsed,
+    'content' => $content,
     'csv_link' => $csv_link,
   ));
   return $markup;
@@ -257,9 +266,17 @@ function islandora_usage_stats_charts_generate_collection_stats($pid) {
         'viewsChartValues' => $views_chart_values,
       )), 'setting');
 
+  if (empty($views_chart_values)) {
+    $content = '<div>' . t("There is no usage data for this collection.") . '<div>';
+  }
+  else {
+    $content = '<canvas id="islandora-usage-stats-chart" height="400px" width="400px"></canvas>';
+  }
+
   $collapsed = variable_get('islandora_usage_stats_charts_collapsed', 1) ? 'collapsed' : '';
   $markup = theme('islandora_usage_stats_charts', array(
     'collapsed' => $collapsed,
+    'content' => $content,
     'csv_link' => NULL,
   ));
   return $markup;
