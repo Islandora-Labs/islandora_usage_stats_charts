@@ -27,7 +27,7 @@
  */
 function mymodule_islandora_usage_stats_charts_usage_alter(&$usage, &$context) {
   // Add a view data point.
-  if ($type == 'views' and $context['pid'] == 'islandora:100') {
+  if ($context['type'] == 'views' and $context['pid'] == 'islandora:100') {
     $usage[] = array('1999-12' => 1);
   }
 }
