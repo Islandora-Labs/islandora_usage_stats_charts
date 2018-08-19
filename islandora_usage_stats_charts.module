@@ -27,6 +27,7 @@ function islandora_usage_stats_charts_menu() {
  * Admin form definition.
  */
 function islandora_usage_stats_charts_admin_settings() {
+  module_load_include('inc', 'islandora_usage_stats_charts', 'includes/utilities');
   $form = array();
   $form['islandora_usage_stats_charts_javascript_url'] = array(
     '#type' => 'textfield',
@@ -91,6 +92,19 @@ function islandora_usage_stats_charts_admin_settings() {
     '#title' => t('Omit from downloads stats'),
     '#default_value' => variable_get('islandora_usage_stats_charts_dsids_to_skip', 'RELS-EXT,RELS-INT,TECHMD,MODS,DC'),
     '#description' => t("Comma-separated list of datastream IDs to exclude from 'downloads' usage stats. All other datastreams will be included. If left blank, all datastreams will be included. !other_setting_note", array('!other_setting_note' => $other_setting_note)),
+  );
+  $form['islandora_usage_stats_charts_cmodels'] = array(
+    '#title' => t("Allowed content models"),
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $cmodels = islandora_usage_stats_charts_get_cmodels();
+  $form['islandora_usage_stats_charts_cmodels']['islandora_usage_stats_charts_allowed_cmodels'] = array(
+    '#type' => 'checkboxes',
+    '#options' => $cmodels,
+    '#default_value' => variable_get('islandora_usage_stats_charts_allowed_cmodels', array()),
+    '#description' => t("Block showing usage stats chart will only show up for objects with the selected content models."),
   );
   return system_settings_form($form);
 }
