@@ -25,20 +25,22 @@ function islandora_usage_stats_charts_block_info() {
  * Implements hook_block_view().
  */
 function islandora_usage_stats_charts_block_view($delta = '') {
-  module_load_include('inc', 'islandora_usage_stats_charts', 'includes/utilities');
   $object = menu_get_object('islandora_object', 2);
-  $allowed_cmodels = islandora_usage_stats_charts_check_for_cmodels($object);
-  if ($delta == 'object') {
-    if ($object && !in_array('islandora:collectionCModel', $object->models) && count($allowed_cmodels) > 0 && arg(3) != 'manage') {
-      $block['content'] = islandora_usage_stats_charts_generate_stats($object->id);
-      return $block;
+  if ($object) {
+    module_load_include('inc', 'islandora_usage_stats_charts', 'includes/utilities');
+    $allowed_cmodels = islandora_usage_stats_charts_check_for_cmodels($object);
+    if ($delta == 'object') {
+      if ($object && !in_array('islandora:collectionCModel', $object->models) && count($allowed_cmodels) > 0 && arg(3) != 'manage') {
+        $block['content'] = islandora_usage_stats_charts_generate_stats($object->id);
+        return $block;
+      }
     }
-  }
-  if ($delta == 'collection') {
-    $url_params = drupal_get_query_parameters();
-    if ($object && in_array('islandora:collectionCModel', $object->models) && count($allowed_cmodels) > 0 && arg(3) != 'manage' && !array_key_exists('page', $url_params)) {
-      $block['content'] = islandora_usage_stats_charts_generate_collection_stats($object->id);
-      return $block;
+    if ($delta == 'collection') {
+      $url_params = drupal_get_query_parameters();
+      if ($object && in_array('islandora:collectionCModel', $object->models) && count($allowed_cmodels) > 0 && arg(3) != 'manage' && !array_key_exists('page', $url_params)) {
+        $block['content'] = islandora_usage_stats_charts_generate_collection_stats($object->id);
+        return $block;
+      }
     }
   }
 }
