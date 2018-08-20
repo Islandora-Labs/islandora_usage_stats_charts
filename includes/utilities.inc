@@ -144,10 +144,11 @@ function islandora_usage_stats_charts_generate_stats($pid) {
         'downloadsChartValues' => $downloads_chart_values,
       )), 'setting');
 
+  drupal_add_css(drupal_get_path('module', 'islandora_usage_stats_charts') . '/css/islandora_usage_stats_charts.css');
   $collapsed = variable_get('islandora_usage_stats_charts_collapsed', 1) ? 'collapsed' : '';
+
   $csv_link = NULL;
-  if (module_exists('islandora_usage_stats_csv')) {
-    drupal_add_css(drupal_get_path('module', 'islandora_usage_stats_charts') . '/css/islandora_usage_stats_charts.css');
+  if (module_exists('islandora_usage_stats_csv') && variable_get('islandora_usage_stats_charts_show_csv_download_link', 1)) {
     $object = islandora_object_load($pid);
     if (islandora_object_access('download islandora usage stats data', $object)) {
       $csv_link = l(t('Download CSV containing full usage stats'), '/islandora/object/' . $pid . '/usage_stats_csv');

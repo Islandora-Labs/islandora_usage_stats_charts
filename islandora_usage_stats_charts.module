@@ -68,6 +68,13 @@ function islandora_usage_stats_charts_admin_settings() {
     '#default_value' => variable_get('islandora_usage_stats_charts_collapsed', 1),
     '#description' => t("Users can still toggle the collapse."),
   );
+  if (module_exists('islandora_usage_stats_csv')) {
+    $form['islandora_usage_stats_charts_show_csv_download_link'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show link to download stats CSV file'),
+      '#default_value' => variable_get('islandora_usage_stats_charts_show_csv_download_link', 1),
+    );
+  }
   $form['islandora_usage_stats_charts_months_to_show'] = array(
     '#type' => 'textfield',
     '#size' => '10',
