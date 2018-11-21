@@ -37,7 +37,7 @@ This module defines a Drupal alter hook that allows third-party modules to alter
 
 ## Development and feedback
 
-Bug reports, use cases, feature requests, and pull requests are welcome. If you want to open a pull request, please open an issue first, and use the pull request template.
+We welcome contributions! [CONTRIBUTING.md](CONTRIBUTING.md) covers everthing you need to know.
 
 ## License
 
